@@ -14,7 +14,7 @@ from backend.schemas import (
     EBookCreate, EBookResponse,
     AvaliacaoCreate, AvaliacaoResponse,
     ProgressoLivroCreate, ProgressoLivroResponse,
-    CatalogoCreate, CatalogoResponse
+    CatalogoCreate, CatalogoResponse, CatalogoUpdate
 )
 
 app = FastAPI()
@@ -452,24 +452,36 @@ def listar_avaliacoes():
     conexao.close()
     return avaliacoes
 
-
 @app.post("/avaliacoes", response_model=AvaliacaoResponse)
 def cadastrar_avaliacao(avaliacao: AvaliacaoCreate):
     conexao = criar_conexao()
-    cursor = conexao.cursor()
-    sql = "INSERT INTO Avaliacao (Nota, User_ID, EBook_ID) VALUES (%s, %s, %s)"
+    cursor = conexao.cursor(dictionary=True)
     try:
-        cursor.execute(sql, (avaliacao.nota, avaliacao.user_id, avaliacao.ebook_id))
+        # 1. Verifica se este utilizador já avaliou este e-book
+        sql_verifica = "SELECT Avac_ID FROM Avaliacao WHERE User_ID = %s AND EBook_ID = %s"
+        cursor.execute(sql_verifica, (avaliacao.user_id, avaliacao.ebook_id))
+        ja_avaliou = cursor.fetchone()
+
+        if ja_avaliou:
+            raise HTTPException(
+                status_code=400, 
+                detail="Você já avaliou este e-book"
+            )
+
+        # 2. Se não avaliou, insere a nova avaliação
+        sql_insert = "INSERT INTO Avaliacao (Nota, User_ID, EBook_ID) VALUES (%s, %s, %s)"
+        cursor.execute(sql_insert, (avaliacao.nota, avaliacao.user_id, avaliacao.ebook_id))
         conexao.commit()
         id_avac = cursor.lastrowid
+
         return {"avac_id": id_avac, **avaliacao.model_dump()}
+
     except IntegrityError:
         conexao.rollback()
         raise HTTPException(status_code=400, detail="Usuário ou E-Book inválido.")
     finally:
         cursor.close()
         conexao.close()
-
 
 @app.delete("/avaliacoes/{avac_id}")
 def excluir_avaliacao(avac_id: int):
@@ -497,12 +509,21 @@ def excluir_avaliacao(avac_id: int):
 def listar_progressos():
     conexao = criar_conexao()
     cursor = conexao.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT Progresso_ID as progresso_id, Prcnt_Leitura as prcnt_leitura, 
-               Atualizacao as atualizacao, User_ID as user_id, EBook_ID as ebook_id
+    
+    # Chamamos a função Progresso_Leitura_Porcent diretamente na query
+    query = """
+        SELECT 
+            Progresso_ID as progresso_id,
+            Pagina_Lidas as pagina_lidas,
+            Progresso_Leitura_Porcent(User_ID, EBook_ID) as prcnt_leitura,
+            Atualizacao as atualizacao,
+            User_ID as user_id,
+            EBook_ID as ebook_id
         FROM Progresso_Livro
-    """)
+    """
+    cursor.execute(query)
     progressos = cursor.fetchall()
+    
     cursor.close()
     conexao.close()
     return progressos
@@ -511,17 +532,47 @@ def listar_progressos():
 @app.post("/progressos", response_model=ProgressoLivroResponse)
 def cadastrar_progresso(progresso: ProgressoLivroCreate):
     conexao = criar_conexao()
-    cursor = conexao.cursor()
-    sql = """
-        INSERT INTO Progresso_Livro (Prcnt_Leitura, Atualizacao, User_ID, EBook_ID)
-        VALUES (%s, %s, %s, %s)
-    """
-    valores = (progresso.prcnt_leitura, progresso.atualizacao, progresso.user_id, progresso.ebook_id)
+    cursor = conexao.cursor(dictionary=True)
+    
     try:
+        # 1. Verifica se já existe um progresso cadastrado para o mesmo usuário e e-book
+        cursor.execute(
+            "SELECT progresso_id FROM Progresso_Livro WHERE User_ID = %s AND EBook_ID = %s",
+            (progresso.user_id, progresso.ebook_id)
+        )
+        existente = cursor.fetchone()
+        
+        if existente:
+            raise HTTPException(
+                status_code=400, 
+                detail="Este usuário já possui um progresso registrado para este e-book."
+            )
+
+        # 2. Executa a inserção normal caso não exista duplicidade
+        sql = """
+            INSERT INTO Progresso_Livro (Pagina_Lidas, Atualizacao, User_ID, EBook_ID)
+            VALUES (%s, %s, %s, %s)
+        """
+        valores = (progresso.pagina_lidas, progresso.atualizacao, progresso.user_id, progresso.ebook_id)
+        
         cursor.execute(sql, valores)
         conexao.commit()
         id_progresso = cursor.lastrowid
-        return {"progresso_id": id_progresso, **progresso.model_dump()}
+
+        # Busca a porcentagem calculada pela função MySQL
+        cursor.execute(
+            "SELECT Progresso_Leitura_Porcent(%s, %s) as prcnt_leitura", 
+            (progresso.user_id, progresso.ebook_id)
+        )
+        resultado = cursor.fetchone()
+        prcnt_calculada = resultado["prcnt_leitura"] if resultado else 0
+
+        return {
+            "progresso_id": id_progresso,
+            "prcnt_leitura": prcnt_calculada,
+            **progresso.model_dump()
+        }
+
     except IntegrityError:
         conexao.rollback()
         raise HTTPException(status_code=400, detail="Usuário ou E-Book inválido.")
@@ -533,22 +584,61 @@ def cadastrar_progresso(progresso: ProgressoLivroCreate):
 @app.put("/progressos/{progresso_id}", response_model=ProgressoLivroResponse)
 def alterar_progresso(progresso_id: int, progresso: ProgressoLivroCreate):
     conexao = criar_conexao()
-    cursor = conexao.cursor()
+    cursor = conexao.cursor(dictionary=True)
+    
     sql = """
         UPDATE Progresso_Livro
-        SET Prcnt_Leitura = %s, Atualizacao = %s, User_ID = %s, EBook_ID = %s
+        SET Pagina_Lidas = %s, Atualizacao = %s, User_ID = %s, EBook_ID = %s
         WHERE Progresso_ID = %s
     """
-    valores = (progresso.prcnt_leitura, progresso.atualizacao, progresso.user_id, progresso.ebook_id, progresso_id)
+    valores = (progresso.pagina_lidas, progresso.atualizacao, progresso.user_id, progresso.ebook_id, progresso_id)
+    
     try:
         cursor.execute(sql, valores)
         if cursor.rowcount == 0:
             raise HTTPException(status_code=404, detail="Registro de progresso não encontrado.")
         conexao.commit()
-        return {"progresso_id": progresso_id, **progresso.model_dump()}
+
+        # Busca a porcentagem recalculada
+        cursor.execute(
+            "SELECT Progresso_Leitura_Porcent(%s, %s) as prcnt_leitura", 
+            (progresso.user_id, progresso.ebook_id)
+        )
+        resultado = cursor.fetchone()
+        prcnt_calculada = resultado["prcnt_leitura"] if resultado else 0
+
+        return {
+            "progresso_id": progresso_id,
+            "prcnt_leitura": prcnt_calculada,
+            **progresso.model_dump()
+        }
     except IntegrityError:
         conexao.rollback()
         raise HTTPException(status_code=400, detail="Erro de integridade com o usuário ou E-Book.")
+    finally:
+        cursor.close()
+        conexao.close()
+
+@app.delete("/progressos/{progresso_id}")
+def excluir_progresso(progresso_id: int):
+    conexao = criar_conexao()
+    cursor = conexao.cursor()
+    sql = "DELETE FROM Progresso_Livro WHERE Progresso_ID = %s"
+    
+    try:
+        cursor.execute(sql, (progresso_id,))
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Progresso não encontrado.")
+        
+        conexao.commit()
+        return {"mensagem": "Progresso excluído com sucesso!"}
+        
+    except IntegrityError:
+        conexao.rollback()
+        raise HTTPException(
+            status_code=500, 
+            detail="Não foi possível excluir o progresso devido a restrições no banco de dados."
+        )
     finally:
         cursor.close()
         conexao.close()
@@ -557,34 +647,108 @@ def alterar_progresso(progresso_id: int, progresso: ProgressoLivroCreate):
 # ==========================================
 # CATÁLOGOS
 # ==========================================
+from fastapi import HTTPException
+from mysql.connector import IntegrityError
+
+# ======================================================
+# LISTAR CATÁLOGOS
+# ======================================================
 @app.get("/catalogos", response_model=list[CatalogoResponse])
 def listar_catalogos():
     conexao = criar_conexao()
     cursor = conexao.cursor(dictionary=True)
+    
+    # 1. Busca todos os catálogos
     cursor.execute("""
-        SELECT ID_Catag as id_catag, Nome as nome, Descricao as descricao, ID_EBook as id_ebook
+        SELECT ID_Catag as id_catag, Nome as nome, Descricao as descricao
         FROM Catalogo
     """)
     catalogos = cursor.fetchall()
+    
+    # 2. Busca os e-books vinculados a cada catálogo
+    for cat in catalogos:
+        cursor.execute(
+            "SELECT ID_EBook FROM Catalogo_EBook WHERE ID_Catag = %s",
+            (cat["id_catag"],)
+        )
+        ebooks = cursor.fetchall()
+        cat["ebooks_ids"] = [e["ID_EBook"] for e in ebooks]
+        
     cursor.close()
     conexao.close()
     return catalogos
 
 
+# ======================================================
+# CADASTRAR CATÁLOGO COM MÚLTIPLOS E-BOOKS
+# ======================================================
 @app.post("/catalogos", response_model=CatalogoResponse)
 def cadastrar_catalogo(catalogo: CatalogoCreate):
     conexao = criar_conexao()
     cursor = conexao.cursor()
-    sql = "INSERT INTO Catalogo (Nome, Descricao, ID_EBook) VALUES (%s, %s, %s)"
-    valores = (catalogo.nome, catalogo.descricao, catalogo.id_ebook)
+    
     try:
-        cursor.execute(sql, valores)
-        conexao.commit()
+        # Insere o catálogo
+        sql_cat = "INSERT INTO Catalogo (Nome, Descricao) VALUES (%s, %s)"
+        cursor.execute(sql_cat, (catalogo.nome, catalogo.descricao))
         id_catag = cursor.lastrowid
+        
+        # Insere os vínculos com os e-books na tabela intermediária
+        if catalogo.ebooks_ids:
+            sql_item = "INSERT INTO Catalogo_EBook (ID_Catag, ID_EBook) VALUES (%s, %s)"
+            valores = [(id_catag, ebook_id) for ebook_id in catalogo.ebooks_ids]
+            cursor.executemany(sql_item, valores)
+            
+        conexao.commit()
         return {"id_catag": id_catag, **catalogo.model_dump()}
+        
     except IntegrityError:
         conexao.rollback()
-        raise HTTPException(status_code=400, detail="E-Book especificado não existe.")
+        raise HTTPException(
+            status_code=400, 
+            detail="Um ou mais E-Books informados não existem no sistema."
+        )
+    finally:
+        cursor.close()
+        conexao.close()
+
+
+# ======================================================
+# EDITAR CATÁLOGO E SEUS E-BOOKS
+# ======================================================
+@app.put("/catalogos/{id_catag}", response_model=CatalogoResponse)
+def editar_catalogo(id_catag: int, catalogo: CatalogoUpdate):
+    conexao = criar_conexao()
+    cursor = conexao.cursor(dictionary=True) # dictionary=True ajuda na leitura
+    
+    try:
+        # 1. Verifica se o catálogo existe
+        cursor.execute("SELECT ID_Catag FROM Catalogo WHERE ID_Catag = %s", (id_catag,))
+        if not cursor.fetchone():
+            raise HTTPException(status_code=404, detail="Catálogo não encontrado.")
+        
+        # 2. Atualiza dados básicos
+        sql_cat = "UPDATE Catalogo SET Nome = %s, Descricao = %s WHERE ID_Catag = %s"
+        cursor.execute(sql_cat, (catalogo.nome, catalogo.descricao, id_catag))
+            
+        # 3. Remove associações antigas
+        cursor.execute("DELETE FROM Catalogo_EBook WHERE ID_Catag = %s", (id_catag,))
+        
+        # 4. Reinsere as novas associações
+        if catalogo.ebooks_ids:
+            sql_item = "INSERT INTO Catalogo_EBook (ID_Catag, ID_EBook) VALUES (%s, %s)"
+            valores = [(id_catag, ebook_id) for ebook_id in catalogo.ebooks_ids]
+            cursor.executemany(sql_item, valores)
+            
+        conexao.commit()
+        return {"id_catag": id_catag, **catalogo.model_dump()}
+        
+    except IntegrityError:
+        conexao.rollback()
+        raise HTTPException(
+            status_code=400, 
+            detail="Um ou mais E-Books informados não existem no sistema."
+        )
     finally:
         cursor.close()
         conexao.close()

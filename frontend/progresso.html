@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressos Cadastrados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/css/estilo.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-primary shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                Gestão Escolar
+            </a>
+            <div>
+                <a href="/" class="btn btn-light btn-sm">
+                    Início
+                </a>
+                <a href="/frontend/cadastro_progresso.html" class="btn btn-light btn-sm">
+                    Novo progresso
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-5">
+        <div class="mb-4">
+            <h1 class="fw-bold">
+                Progressos Cadastrados
+            </h1>
+            <p class="text-muted">
+                Consulte os registros de progresso no sistema.
+            </p>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h5 class="card-title fw-bold mb-3">
+                    🔎 Filtrar progressos
+                </h5>
+
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="campoFiltro" class="form-label">
+                            Filtrar por
+                        </label>
+                        <select id="campoFiltro" class="form-select">
+                            <option value="progresso_id">ID Progresso</option>
+                            <option value="user_id">ID Usuário</option>
+                            <option value="ebook_id">ID E-Book</option>
+                            <option value="prcnt_leitura">Porcentagem (%)</option>
+                            <option value="atualizacao">Data de Atualização</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-7">
+                        <label for="textoFiltro" class="form-label">
+                            Pesquisar
+                        </label>
+                        <input type="text" id="textoFiltro" class="form-control" placeholder="Digite o que deseja pesquisar...">
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="button" id="btnLimparFiltro" class="btn btn-secondary w-100">
+                            Limpar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Listagem -->
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Progresso</th>
+                                <th>Atualização</th>
+                                <th>ID Usuário</th>
+                                <th>ID E-Book</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaProgressos">
+                            <tr>
+                                <td colspan="6" class="text-center">Carregando progressos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/frontend/js/progresso.js"></script>
+</body>
+</html>

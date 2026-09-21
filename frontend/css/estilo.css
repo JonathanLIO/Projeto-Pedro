@@ -3,8 +3,8 @@
    ========================================================= */
 
 body {
-    background-color: #f5f7fa;
-    color: #212529;
+    background-color: #f3f7f4;
+    color: #1e2923;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -15,11 +15,13 @@ body {
 
 .navbar {
     min-height: 64px;
+    background-color: #1b4332 !important; /* Verde escuro */
 }
 
 .navbar-brand {
     font-size: 1.25rem;
     letter-spacing: 0.3px;
+    color: #ffffff !important;
 }
 
 
@@ -27,8 +29,8 @@ body {
    TÍTULOS
    ========================================================= */
 
-h1 {
-    color: #212529;
+h1, h2, h3, h4, h5, h6 {
+    color: #1b4332;
 }
 
 
@@ -38,10 +40,11 @@ h1 {
 
 .card {
     border-radius: 12px;
+    border: 1px solid #e0eadd;
 }
 
 .card-title {
-    color: #212529;
+    color: #1b4332;
 }
 
 
@@ -51,21 +54,24 @@ h1 {
 
 .form-label {
     font-weight: 600;
+    color: #2d6a4f;
 }
 
 .form-control,
 .form-select {
     border-radius: 8px;
+    border-color: #b7d5c4;
 }
 
 .form-control:focus,
 .form-select:focus {
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    border-color: #2d6a4f;
+    box-shadow: 0 0 0 0.2rem rgba(45, 106, 79, 0.2);
 }
 
 
 /* =========================================================
-   BOTÕES
+   BOTÕES (Sobrescrevendo padrões do Bootstrap)
    ========================================================= */
 
 .btn {
@@ -74,6 +80,30 @@ h1 {
 
 .btn-primary {
     font-weight: 600;
+    background-color: #2d6a4f !important;
+    border-color: #2d6a4f !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #1b4332 !important;
+    border-color: #1b4332 !important;
+}
+
+.btn-outline-primary {
+    color: #2d6a4f !important;
+    border-color: #2d6a4f !important;
+    font-weight: 600;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: #2d6a4f !important;
+    border-color: #2d6a4f !important;
+    color: #ffffff !important;
 }
 
 
@@ -87,6 +117,8 @@ h1 {
 
 .table thead th {
     white-space: nowrap;
+    background-color: #e8f0ec;
+    color: #1b4332;
 }
 
 .table tbody td {
@@ -100,6 +132,8 @@ h1 {
 
 .filtro-alunos {
     border-radius: 12px;
+    background-color: #ffffff;
+    border: 1px solid #e0eadd;
 }
 
 
@@ -109,12 +143,10 @@ h1 {
 
 #mensagem {
     font-weight: 600;
+    color: #2d6a4f;
 }
 
 
-/* =========================================================
-   RESPONSIVIDADE
-   ========================================================= */
 
 @media (max-width: 768px) {
 
@@ -134,10 +166,6 @@ h1 {
 }
 
 
-/* =========================================================
-   DASHBOARD
-   ========================================================= */
-
 .card {
     transition:
         transform 0.2s ease,
@@ -149,5 +177,5 @@ h1 {
 
     box-shadow:
         0 0.5rem 1rem
-        rgba(0, 0, 0, 0.12) !important;
+        rgba(27, 67, 50, 0.15) !important;
 }

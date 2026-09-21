@@ -63,10 +63,18 @@ CREATE TABLE Progresso_Livro (
 CREATE TABLE Catalogo (
     ID_Catag INT AUTO_INCREMENT PRIMARY KEY,
     Nome VARCHAR(255) NOT NULL,
-    Descricao TEXT,
+    Descricao TEXT
+);
+
+-- 2. Tabela Intermediária (liga N catálogos a N e-books)
+CREATE TABLE Catalogo_EBook (
+    ID_Catag INT NOT NULL,
     ID_EBook INT NOT NULL,
+    PRIMARY KEY (ID_Catag, ID_EBook),
+    FOREIGN KEY (ID_Catag) REFERENCES Catalogo(ID_Catag) ON DELETE CASCADE,
     FOREIGN KEY (ID_EBook) REFERENCES EBook(EBook_ID) ON DELETE CASCADE
 );
+
 
 CREATE TABLE Usuario_Catalogo (
     User_ID INT NOT NULL,
@@ -114,13 +122,29 @@ INSERT INTO Progresso_Livro (Atualizacao, Pagina_Lidas, User_ID, EBook_ID) VALUE
 ('2024-05-10', 100, 1, 1),
 ('2024-05-12', 50, 2, 2);
 
-INSERT INTO Catalogo (Nome, Descricao, ID_EBook) VALUES 
-('Clássicos Imperdíveis', 'Coleção com grandes obras da literatura.', 1),
-('Ficção Dystopica', 'Obras focadas em futuros distópicos.', 2);
+-- 1. Inserindo alguns catálogos de teste
+INSERT INTO Catalogo (Nome, Descricao) VALUES
+('Tecnologia e Programação', 'Livros sobre desenvolvimento de software, dados e tecnologia em geral.'),
+('Ficção Científica', 'Obras de ficção com temas futuristas e tecnológicos.'),
+('Desenvolvimento Pessoal', 'Livros focados em produtividade, hábitos e crescimento pessoal.');
 
-INSERT INTO Usuario_Catalogo (User_ID, ID_Catag) VALUES 
+-- 2. Vinculando os e-books aos catálogos na tabela intermediária
+-- Nota: Certifique-se de que os IDs dos e-books (ex: 1, 2, 3, 4, 5) já existam na sua tabela EBook.
+
+-- Para o Catálogo 1 (Tecnologia): associando os e-books ID 1, 2 e 3
+INSERT INTO Catalogo_EBook (ID_Catag, ID_EBook) VALUES
 (1, 1),
-(2, 2);
+(1, 2),
+(1, 3);
+
+-- Para o Catálogo 2 (Ficção Científica): associando os e-books ID 2 e 4
+INSERT INTO Catalogo_EBook (ID_Catag, ID_EBook) VALUES
+(2, 2),
+(2, 3);
+
+-- Para o Catálogo 3 (Desenvolvimento Pessoal): associando o e-book ID 5
+INSERT INTO Catalogo_EBook (ID_Catag, ID_EBook) VALUES
+(3, 1);
 
 INSERT INTO Bibliotecario_EBook (Biblio_ID, EBook_ID) VALUES 
 (1, 1),

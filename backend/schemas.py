@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, EmailStr
 
 
@@ -104,7 +104,7 @@ class AvaliacaoResponse(BaseModel):
 # PROGRESSO DO LIVRO
 # ==========================================
 class ProgressoLivroCreate(BaseModel):
-    prcnt_leitura: Optional[int] = 0
+    pagina_lidas: int = 0
     atualizacao: date
     user_id: int
     ebook_id: int
@@ -112,7 +112,8 @@ class ProgressoLivroCreate(BaseModel):
 
 class ProgressoLivroResponse(BaseModel):
     progresso_id: int
-    prcnt_leitura: int
+    pagina_lidas: int
+    prcnt_leitura: int  # Calculado no SQL através da função Progresso_Leitura_Porcent
     atualizacao: date
     user_id: int
     ebook_id: int
@@ -124,11 +125,15 @@ class ProgressoLivroResponse(BaseModel):
 class CatalogoCreate(BaseModel):
     nome: str
     descricao: Optional[str] = None
-    id_ebook: int
+    ebooks_ids: List[int]  # Lista com os IDs dos e-books associados
 
+class CatalogoUpdate(BaseModel):
+    nome: str
+    descricao: Optional[str] = None
+    ebooks_ids: List[int]
 
 class CatalogoResponse(BaseModel):
     id_catag: int
     nome: str
     descricao: Optional[str] = None
-    id_ebook: int
+    ebooks_ids: List[int]

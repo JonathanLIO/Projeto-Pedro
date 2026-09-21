@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de E-Book</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Nosso CSS -->
+    <link rel="stylesheet" href="/frontend/css/estilo.css">
+</head>
+
+<body>
+
+    <!-- MENU -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                Biblioteca Digital
+            </a>
+            <div>
+                <a href="/frontend/ebooks.html" class="btn btn-light btn-sm">
+                    Ver todos os e-books
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO -->
+    <main class="container py-5">
+
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+
+                        <h1 id="tituloFormulario" class="h3 fw-bold mb-3">
+                            Cadastrar E-Book
+                        </h1>
+
+                        <!-- Mensagem de Sucesso ou Erro -->
+                        <div id="mensagem" class="fw-bold mb-3 text-primary"></div>
+
+                        <form id="form-ebook">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label fw-semibold">
+                                    Título do E-Book
+                                </label>
+                                <input type="text" id="titulo" class="form-control" placeholder="Digite o título do e-book" required>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="autor_id" class="form-label fw-semibold">
+                                        Autor
+                                    </label>
+                                    <select id="autor_id" class="form-select" required>
+                                        <option value="">Carregando autores...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ctego_id" class="form-label fw-semibold">
+                                        Categoria
+                                    </label>
+                                    <select id="ctego_id" class="form-select" required>
+                                        <option value="">Carregando categorias...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="ano" class="form-label fw-semibold">
+                                        Ano de Publicação
+                                    </label>
+                                    <input type="number" id="ano" class="form-control" placeholder="Ex: 2024">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="paginas" class="form-label fw-semibold">
+                                        Número de Páginas
+                                    </label>
+                                    <input type="number" id="paginas" class="form-control" placeholder="Ex: 250">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="capa" class="form-label fw-semibold">
+                                    URL da Capa
+                                </label>
+                                <input type="url" id="capa" class="form-control" placeholder="https://exemplo.com/imagem.jpg">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="descricao" class="form-label fw-semibold">
+                                    Descrição / Sinopse
+                                </label>
+                                <textarea id="descricao" class="form-control" rows="3" placeholder="Digite uma breve descrição do e-book"></textarea>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" id="btnSalvar" class="btn btn-primary w-100">
+                                    Cadastrar
+                                </button>
+                                <a href="/frontend/ebooks.html" class="btn btn-outline-secondary w-100">
+                                    Cancelar
+                                </a>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript do projeto -->
+    <script src="/frontend/js/ebook.js"></script>
+
+</body>
+
+</html>

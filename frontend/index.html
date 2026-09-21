@@ -2,284 +2,196 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Biblioteca</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <title>Sistema de Gestão Escolar</title>
-
-
-    <!-- =====================================================
-         BOOTSTRAP
-    ====================================================== -->
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
-
-    <!-- =====================================================
-         CSS DO PROJETO
-    ====================================================== -->
-
-    <link
-        rel="stylesheet"
-        href="/frontend/css/estilo.css"
-    >
-
+    <!-- CSS DO PROJETO -->
+    <link rel="stylesheet" href="/frontend/css/estilo.css">
 </head>
-
 
 <body>
 
-
-    <!-- =====================================================
-         MENU SUPERIOR
-    ====================================================== -->
-
+    <!-- MENU SUPERIOR -->
     <nav class="navbar navbar-dark bg-primary shadow">
-
         <div class="container">
-
-            <a
-                class="navbar-brand fw-bold"
-                href="/"
-            >
-                🎓 Sistema de Gestão Escolar
+            <a class="navbar-brand fw-bold" href="/">
+                Sistema de Gestão de Biblioteca
             </a>
-
         </div>
-
     </nav>
 
-
-    <!-- =====================================================
-         CONTEÚDO PRINCIPAL
-    ====================================================== -->
-
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="container py-5">
 
-
-        <!-- =================================================
-             CABEÇALHO
-        ================================================== -->
-
+        <!-- CABEÇALHO -->
         <div class="text-center mb-5">
-
-            <h1 class="display-5 fw-bold">
-                Gestão Escolar
-            </h1>
-
+            <h1 class="display-5 fw-bold">Gestão de Biblioteca</h1>
             <p class="lead text-muted">
-                Gerencie alunos, professores e funcionários
-                de forma simples e organizada.
+                Gerencie autores, avaliações, bibliotecários, catálogos, categorias, e-books, usuários e progressos de
+                leitura.
             </p>
+        </div>
+
+        <!-- CARDS -->
+        <div class="row g-4 justify-content-center">
+
+            <!-- AUTORES -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <h2 class="h4 fw-bold">Autores</h2>
+                        <p class="text-muted">
+                            Consulte os autores cadastrados ou realize um novo cadastro.
+                        </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/frontend/autores.html" class="btn btn-primary">Ver autores</a>
+                            <a href="/frontend/cadastro_autor.html" class="btn btn-outline-primary">Cadastrar autor</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AVALIAÇÕES -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <h2 class="h4 fw-bold">Avaliações</h2>
+                        <p class="text-muted">
+                            Consulte as avaliações registradas ou adicione uma nova avaliação.
+                        </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/frontend/avaliacoes.html" class="btn btn-primary">Ver avaliações</a>
+                            <a href="/frontend/cadastro_avaliacao.html" class="btn btn-outline-primary">Cadastrar
+                                avaliação</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BIBLIOTECÁRIOS -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <h2 class="h4 fw-bold">Bibliotecários</h2>
+                        <p class="text-muted">
+                            Consulte os bibliotecários cadastrados ou realize um novo cadastro.
+                        </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/frontend/bibliotecarios.html" class="btn btn-primary">Ver bibliotecários</a>
+                            <a href="/frontend/cadastro_bibliotecario.html" class="btn btn-outline-primary">Cadastrar
+                                bibliotecário</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATÁLOGOS -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <h2 class="h4 fw-bold">Catálogos</h2>
+                        <p class="text-muted">
+                            Consulte os catálogos disponíveis ou cadastre um novo catálogo.
+                        </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/frontend/catalogos.html" class="btn btn-primary">Ver catálogos</a>
+                            <a href="/frontend/cadastro_catalogo.html" class="btn btn-outline-primary">Cadastrar
+                                catálogo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORIAS -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <h2 class="h4 fw-bold">Categorias</h2>
+                        <p class="text-muted">
+                            Consulte as categorias de livros ou cadastre uma nova categoria.
+                        </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/frontend/categorias.html" class="btn btn-primary">Ver categorias</a>
+                            <a href="/frontend/cadastro_categoria.html" class="btn btn-outline-primary">Cadastrar
+                                categoria</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-BOOKS -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <h2 class="h4 fw-bold">E-Books</h2>
+                        <p class="text-muted">
+                            Consulte o acervo de e-books ou cadastre novos títulos.
+                        </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/frontend/ebooks.html" class="btn btn-primary">Ver e-books</a>
+                            <a href="/frontend/cadastro_ebook.html" class="btn btn-outline-primary">Cadastrar e-book</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USUÁRIOS -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <h2 class="h4 fw-bold">Usuários</h2>
+                        <p class="text-muted">
+                            Consulte os usuários do sistema ou realize um novo cadastro.
+                        </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/frontend/usuarios.html" class="btn btn-primary">Ver usuários</a>
+                            <a href="/frontend/cadastro_usuario.html" class="btn btn-outline-primary">Cadastrar
+                                usuário</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROGRESSO -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <h2 class="h4 fw-bold">Progresso de Leitura</h2>
+                        <p class="text-muted">
+                            Consulte o progresso de leitura dos usuários ou registre uma nova leitura.
+                        </p>
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/frontend/progresso.html" class="btn btn-primary">Ver progressos</a>
+                            <a href="/frontend/cadastro_progresso.html" class="btn btn-outline-primary">Cadastrar
+                                progresso</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
         </div>
 
-
-        <!-- =================================================
-             CARDS
-        ================================================== -->
-
-        <div class="row g-4">
-
-
-            <!-- =============================================
-                 ALUNOS
-            ============================================== -->
-
-            <div class="col-md-4">
-
-                <div class="card h-100 shadow-sm border-0">
-
-                    <div class="card-body text-center p-4">
-
-                        <div class="display-4 mb-3">
-                            👨‍🎓
-                        </div>
-
-                        <h2 class="h4 fw-bold">
-                            Alunos
-                        </h2>
-
-                        <p class="text-muted">
-                            Consulte os alunos cadastrados
-                            ou realize um novo cadastro.
-                        </p>
-
-
-                        <div class="d-grid gap-2 mt-4">
-
-                            <a
-                                href="/frontend/alunos.html"
-                                class="btn btn-primary"
-                            >
-                                Ver alunos
-                            </a>
-
-                            <a
-                                href="/frontend/cadastrodealuno.html"
-                                class="btn btn-outline-primary"
-                            >
-                                Cadastrar aluno
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =============================================
-                 PROFESSORES
-            ============================================== -->
-
-            <div class="col-md-4">
-
-                <div class="card h-100 shadow-sm border-0">
-
-                    <div class="card-body text-center p-4">
-
-                        <div class="display-4 mb-3">
-                            👨‍🏫
-                        </div>
-
-                        <h2 class="h4 fw-bold">
-                            Professores
-                        </h2>
-
-                        <p class="text-muted">
-                            Consulte os professores cadastrados
-                            ou realize um novo cadastro.
-                        </p>
-
-
-                        <div class="d-grid gap-2 mt-4">
-
-                            <a
-                                href="/frontend/professores.html"
-                                class="btn btn-primary"
-                            >
-                                Ver professores
-                            </a>
-
-                            <a
-                                href="/frontend/cadastrodeprofessor.html"
-                                class="btn btn-outline-primary"
-                            >
-                                Cadastrar professor
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =============================================
-                 FUNCIONÁRIOS
-            ============================================== -->
-
-            <div class="col-md-4">
-
-                <div class="card h-100 shadow-sm border-0">
-
-                    <div class="card-body text-center p-4">
-
-                        <div class="display-4 mb-3">
-                            👔
-                        </div>
-
-                        <h2 class="h4 fw-bold">
-                            Funcionários
-                        </h2>
-
-                        <p class="text-muted">
-                            Consulte os funcionários cadastrados
-                            ou realize um novo cadastro.
-                        </p>
-
-
-                        <div class="d-grid gap-2 mt-4">
-
-                            <a
-                                href="/frontend/funcionarios.html"
-                                class="btn btn-primary"
-                            >
-                                Ver funcionários
-                            </a>
-
-                            <a
-                                href="/frontend/cadastrodefuncionario.html"
-                                class="btn btn-outline-primary"
-                            >
-                                Cadastrar funcionário
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- =================================================
-             MENSAGEM
-        ================================================== -->
-
-        <div
-            id="mensagem"
-            class="mt-4 text-center"
-        ></div>
-
+        <!-- MENSAGEM -->
+        <div id="mensagem" class="mt-4 text-center"></div>
 
     </main>
 
-
-    <!-- =====================================================
-         RODAPÉ
-    ====================================================== -->
-
+    <!-- RODAPÉ -->
     <footer class="text-center text-muted py-4">
-
-        <small>
-            Sistema de Gestão Escolar
-        </small>
-
+        <small>Sistema de Gestão de Biblioteca</small>
     </footer>
 
+    <!-- BOOTSTRAP JAVASCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- =====================================================
-         BOOTSTRAP JAVASCRIPT
-    ====================================================== -->
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    </script>
-
-
-    <!-- =====================================================
-         JAVASCRIPT DO PROJETO
-    ====================================================== -->
-
+    <!-- JAVASCRIPT DO PROJETO -->
     <script src="/frontend/js/app.js"></script>
-
 
 </body>
 
